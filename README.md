@@ -1,4 +1,4 @@
 blog
 ====
 
-Configuration for personal blog based on Pelican 
+Configuration for personal blog based on Pelican
