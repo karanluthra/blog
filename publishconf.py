@@ -24,3 +24,5 @@ CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 
 DISQUS_SITENAME = "blogkaranluthra"
 GOOGLE_ANALYTICS = "UA-48523857-1"
+TWITTER_USERNAME = "karanluthra06"
+GITHUB_URL = 'http://github.com/karanluthra/'
