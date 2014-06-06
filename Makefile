@@ -54,7 +54,11 @@ help:
 	@echo '                                                                       '
 
 html:
+ifdef THEME
+	$(PELICAN) $(INPUTDIR) -o $(TESTDIR) -s $(CONFFILE) -t $(THEME) $(PELICANOPTS)
+else
 	$(PELICAN) $(INPUTDIR) -o $(TESTDIR) -s $(CONFFILE) $(PELICANOPTS)
+endif
 
 clean:
 	[ ! -d $(OUTPUTDIR) ] || rm -rf $(TESTDIR)
