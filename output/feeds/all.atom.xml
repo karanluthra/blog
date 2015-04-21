@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Karan Luthra</title><link href="http://blog.karanluthra.in/" rel="alternate"></link><link href="http://blog.karanluthra.in/feeds/all.atom.xml" rel="self"></link><id>http://blog.karanluthra.in/</id><updated>2014-07-01T00:00:00+05:30</updated><entry><title>Half Time: What's up at Trojitá</title><link href="http://blog.karanluthra.in/2014/07/half-time-whats-up-at-trojita/" rel="alternate"></link><updated>2014-07-01T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2014-07-01:2014/07/half-time-whats-up-at-trojita/</id><summary type="html">&lt;p&gt;Second half has just begun for the GSoC coding period as well as for the year 2014. We are all more warmed up and pacing up to see another "you will be glued to the second half", but let's take a look at what has kept me involved in Trojitá uptil now. My &lt;a href="http://www.google-melange.com/gsoc/project/details/google/gsoc2014/luthrak/5685265389584384"&gt;project proposal&lt;/a&gt; for &lt;a href="http://trojita.flaska.net/"&gt;Trojitá&lt;/a&gt; is to:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rewrite Trojitá's SMTP code to enable it to use Trojitá's Sockets, and make it a first class citizen wrt the code quality, robustness, maintainabilty and features.  &lt;/li&gt;
+&lt;li&gt;Bring essential features and UI changes that will make Trojitá more usable and ready for a larger user-base.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Since the second goal consists of small tasks that would also help a newbie (me) get more comfortable with the code, me and my mentors decided to start with these small tasks first. This is what has been done uptil now:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Network Reconnection Attempts&lt;br /&gt;
+Trojitá got a feature to automatically start a reconnect attempt cycle whenever there's a network error.&lt;br /&gt;
+Previously, whenever the application was hit by a network error, it would switch to offline mode and inform the user by throwing an error message (which would be a modal message box). Now, a message box is still thrown the first time an error is faced and attempts for reconnect begin. To keep in line with Trojitá's prinicples of being less resource hungry and be usable for users with expensive mobile connections, any two reconnect attempts are separated with timeout that doubles every step. So, timeouts go like 5 secs, 10 secs,.. 160 secs, 300 secs (Inspired by the &lt;a href="http://en.wikipedia.org/wiki/Exponential_backoff"&gt;Exponential Backoff&lt;/a&gt; algorithm I came across in Computer Networks class). And beyond that, attempts are made every 5 mins or manually stopped and restarted by the user. An unattended message box gets closed if network reconnects successfully. &lt;em&gt;Status: Merged in master&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Forwarding Support&lt;br /&gt;
+Trojitá already had the ability to treat whole messages dragged and dropped into the attachments view in a composer as messages to be forwarded as dot.eml files. In addition to that, trojitá now has a patch (under review atm) that would enable forward as attachment by a single click from the GUI. This includes mangling the subject of the original message and prefixing the "Fwd: " string, as well as marking the original message as $Forwarded. &lt;em&gt;Status: Under &lt;a href="https://git.reviewboard.kde.org/r/118606/"&gt;review&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Improvements around Compose Widget  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;One improvement is a bug fix that allows any changes to the subject field or the recipients fields to be treated as modifications eligible for storing in a draft. &lt;em&gt;Status: Merged in master&lt;/em&gt;  &lt;/li&gt;
+&lt;li&gt;Another improvement is the ability to switch the reply mode { private reply, reply to all, reply to all but me, mailing list reply} from the composer as well (previously, a mode would be picked up at the time of creating the compose reply dialog and switching between modes wasn't possible unless a new dialog be opened). The change of mode triggers the automatic setting up of recipients in the current composer and modifying the recipients puts the reply mode in a fifth state, named "hand picked recipients". This patch is under &lt;a href="https://git.reviewboard.kde.org/r/118802/"&gt;review&lt;/a&gt; and it is yet to be finalised &lt;em&gt;&lt;em&gt;where&lt;/em&gt;&lt;/em&gt; in the compose window should this dropdown menu be placed.  &lt;/li&gt;
+&lt;li&gt;Another improvement (that won't be visible to the user) is a change in how a GUI::ComposeWidget is created. A compose widget needs a parent (MainWindow), an MSA(Mail Submissin Agent) object, a settings (QSettings) object and a couple of purpose specific parameters that can pre-fill the fields in the composer (eg: subject, body(quoted), in-reply-to, etc in the case of a "reply"). Due to increasing use-cases for the Compose Widget (Message Forwarding and Message Redirectin are two such that are being added in this GSoC project), we felt the need to refactor the ComposeWidget and provide a static API for creating ComposeWidget instances with specific roles. It looks like this:&lt;br /&gt;
+&lt;script src="https://gist.github.com/karanluthra/37c3f65e229761002958.js"&gt;&lt;/script&gt;
+&lt;a href="https://gist.github.com/karanluthra/37c3f65e229761002958#file-static-cw"&gt;Gist&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The second half has started off with shifting the focus onto the bigger task of rewriting the SMTP library. While writing this blog post I realised how it has become a long one to read, and I will try and write about whats up with SMTP more regularly, and hopefully as smaller posts. I find twitter to be a better output stream while in the code-sprint mood and you can follow me on Twitter, I am &lt;a href="https://twitter.com/karanluthra06"&gt;@karanluthra06&lt;/a&gt;. Best wishes to all GSoCers; Let's make this second half the most exciting ever!&lt;/p&gt;
+&lt;p&gt;Cheers! :)&lt;/p&gt;</summary><category term="c++"></category><category term="gsoc"></category><category term="trojita"></category><category term="kde"></category><category term="foss"></category></entry><entry><title>This summer I'm flipping bits, not burgers</title><link href="http://blog.karanluthra.in/2014/06/flipping-bits-not-burgers/" rel="alternate"></link><updated>2014-06-10T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2014-06-10:2014/06/flipping-bits-not-burgers/</id><summary type="html">&lt;p&gt;I wasn't even checking the results that night when I got a congratulatory email from a friend. There was nothing else one could be congratulated for on that night, except for GSoC results. As difficult as it was to believe I found it to be true that my proposal indeed got selected for the 10th &lt;a href="http://www.google-melange.com/gsoc/homepage/google/gsoc2014"&gt;Google Summer of Code&lt;/a&gt;, for the summers of 2014. I will be working under &lt;a href="http://www.kde.org/"&gt;KDE&lt;/a&gt; and my &lt;a href="http://www.google-melange.com/gsoc/project/details/google/gsoc2014/luthrak/5685265389584384"&gt;proposal&lt;/a&gt; aims to improve how &lt;a href="http://trojita.flaska.net"&gt;Trojitá&lt;/a&gt; sends email over SMTP and make it as robust and capable as the IMAP part, the USP of the email client. :D&lt;/p&gt;
+&lt;p&gt;My first contribution to Free and Open Source Software began with a &lt;a href="http://quickgit.kde.org/?p=trojita.git&amp;amp;a=commit&amp;amp;h=6f14132d37666148e2db44be9e051816bb33daca"&gt;patch&lt;/a&gt; for Trojitá in February. It was a feature request that I thought I could work on, and while it took me very long to bring the patch to the quality that could get it merged, it was a different high I experienced when I heard "Ship It!" for the first time in my life, and saw my name in the 'About Trojitá' menu of the email client I had started loving to use. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="About Trojitá - List of Contributors" src="/images/trojita_authors.png" title="About Trojitá - List of Contributors" /&gt;&lt;/p&gt;
+&lt;p&gt;This is the reward of working with open source projects. You can imagine the impact your code can have on thousands (and millions? :D) of users and this motivates you to improve the patch each time it gets returned from a review by mentors. Another encouragement is that open source projects do not care about your exam scores, your university's reputation, or even your majors for that matter! I was thinking hard how to spend the summers after my final semester and before joining the job I have been offered through campus placement, and Google Summer of Code seemed like the dream option to me. However, I was never too sure about getting selected as I am not an experienced developer, so I kept exploring other options while planning to keep contributing to Trojitá at my own, slow pace. &lt;/p&gt;
+&lt;p&gt;The first thing I did on the morning after the results night, was clear all the bookmarked interships! I have cleared most of the distractions by now, and got another &lt;a href="http://quickgit.kde.org/?p=trojita.git&amp;amp;a=commit&amp;amp;h=7708aaa7fda2877a868a542e9a1335683c9cbdb7"&gt;patch&lt;/a&gt; submitted recently. I am still lagging behind schedule, but it's only going to get better from now :)&lt;/p&gt;
+&lt;p&gt;If you are even one bit curious about how Open Source projects, GSoC, or Computer Science outside your exam-syllabus works, then keep watching this space. I will try and blog as much as I can about all that I am upto :)&lt;/p&gt;
+&lt;p&gt;Cheers to the Summer of 2014! :D&lt;/p&gt;
+&lt;p&gt;&lt;img alt="GSoC goodies" src="/images/gsoc-diary.jpg" title="GSoC goodies, to begin with :D" /&gt;&lt;/p&gt;</summary><category term="c++"></category><category term="gsoc"></category><category term="trojita"></category><category term="kde"></category><category term="foss"></category></entry><entry><title>This blog is now powered by Pelican</title><link href="http://blog.karanluthra.in/2014/03/now-powered-by-pelican/" rel="alternate"></link><updated>2014-03-14T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2014-03-14:2014/03/now-powered-by-pelican/</id><summary type="html">&lt;p&gt;It has been a while since I migrated this blog from Google's Blogger to &lt;a href="http://blog.getpelican.com/"&gt;Pelican&lt;/a&gt;, a static web log generator.&lt;/p&gt;
+&lt;h3&gt;Pelican?&lt;/h3&gt;
+&lt;p&gt;I will make this easy for those who write and read blogs made on Wordpress or Blogger. Pelican is a python program that takes as input your content written in plain text, processes it according to the configuration specified by you, and generates all the required HTML for each of your posts, pages and features. The processing step involves taking care of a lot of things like :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Generating the CSS by processing the Theme specified by the user&lt;/li&gt;
+&lt;li&gt;Building the structure of the web pages from plain-text documents (written in &lt;a href="http://en.wikipedia.org/wiki/Markdown" title="Wikipedia:Markdown"&gt;Markdown&lt;/a&gt;/&lt;a href="http://en.wikipedia.org/wiki/ReStructuredText" title="Wikipedia:ReStructuredText"&gt;reStructuredText&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Organizing the posts, pages and other content so that each resource is correctly addressed by the right URL&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Doesn't Blogger do this for us anyway?&lt;/h3&gt;
+&lt;p&gt;Yes, it does. What it doesn't do is allow us to style our blogs using customized themes. I once had to edit a "blogger template" to make it look like what I wanted it to for a Birthday Wish book. Trying to make it float was a nightmare! &lt;em&gt;Lots&lt;/em&gt; of Ducktape and I dare not touch the EditHTML button again. Lesson learnt: Blogger doesn't like getting customized much.&lt;/p&gt;
+&lt;p&gt;Also, Blogger doesn't allow us to host our blogs anywhere else. I felt a little suffocated there. The difference between the time I started my Blogger blog and today is: Now I have my own VPS, I am using and learning to use Git and Github for a lot of things, and I am tired of being in the comfort-zone.&lt;/p&gt;
+&lt;h3&gt;So what is under the hood?&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;I am using &lt;a href="http://pages.github.com/"&gt;github-pages&lt;/a&gt; to host the static web-site generated by pelican. (other cool options: VPS, Dropbox!)&lt;/li&gt;
+&lt;li&gt;I am using the default 'notmyidea' theme, but I have been looking at &lt;a href="https://github.com/getpelican/pelican-themes"&gt;other themes&lt;/a&gt; and will give a custom look to the blog soon.&lt;/li&gt;
+&lt;li&gt;The configuration files are version controlled and backed up at &lt;a href="https://github.com/karanluthra/blog"&gt;this&lt;/a&gt; Github repo.&lt;/li&gt;
+&lt;li&gt;I am using Markdown for structuring the content and I &lt;em&gt;love&lt;/em&gt; it! &lt;/li&gt;
+&lt;li&gt;I am using three categories: Tech, Outdoors, and Misc. The use of tags is going to help readers really pick only what they want to read, as I couldn't convince myself to let the blog not be about &lt;em&gt;everything&lt;/em&gt; I do.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;How easy was to set all this up?&lt;/h3&gt;
+&lt;p&gt;It could be &lt;em&gt;easier&lt;/em&gt; for someone who had prior experience of using static website generators (Jekyll migrators?). It took me a little time to put all the pieces together, using two different configuration files, one for viewing on the local machine, and the other to publish/deploy. I didn't understand when and how to use the relative links setting, and had broken links for a long while. Another time consuming area was migrating the comments on each post. Blogger doesn't have cool "check out" options, and I had to go the long way of porting comments to Disqus first, and then make it fit the new slug and URL structure. But yes, if you're ready to move out of the Blogger/Wordpress comfort zone, I guess it is fair to let Pelican give you that tough time and the thrill of setting up everything yourself. &lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;To end this post, I would say it was fun as well as beneficial to have left Blogger behind. Life is better when your blogs work according to you than you working according to Blogger. :D&lt;/p&gt;
+&lt;p&gt;The migration will be easier than you think, right now. Let me know if you plan to switch. :)&lt;/p&gt;</summary><category term="pelican"></category><category term="python"></category><category term="blogging"></category><category term="github"></category></entry><entry><title>BollyYoYo v/s Music</title><link href="http://blog.karanluthra.in/2014/01/bollyyoyo-vs-music/" rel="alternate"></link><updated>2014-01-04T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2014-01-04:2014/01/bollyyoyo-vs-music/</id><summary type="html">&lt;p&gt;On a bad day, I felt something was wrong with me when I couldn't contribute much to the 'hot' discussion about the latest songs, the one with the 'tooh', and the 'blue eyes'. "I haven't heard these songs" got me a stare, the eyes filled with shock and ridicule. A more generous person in the group asked me what music do I listen to instead. I couldn't answer that properly (I believe many of us are unable to), and probably also because I was sure the answer wont excite anyone there.&lt;/p&gt;
+&lt;p&gt;Today is a good day, and I'd like to take a re-attempt at that question. I have been listening (and watching) MTV Unplugged Season 3 sessions on repeat since morning. Listen to the same song a 50 times, and you still find a piece that you missed noticing the last time. Also include MTV Coke Studio sessions from India as well as Pakistan. These shows have produced some of the most attention-consuming soundtracks in the last few years. Attention consuming like (an analogy) Sherlock, compared to other shows like BBT or F.R.I.E.N.D.S. Like Inception (and many others) amongst hollywood movies. Like what Madras Cafe was to Indian cinema and 24 to Indian Television, recently. These shows have the feeling of live music: they are recorded in one take, with real musicians, and give artists ample opportunity to showcase their creativity. This freedom to the artist is what makes "Music" out of "Songs". Sprinkle the collaboration word over, and it turns into Chicken Soup for the Music Soul! Everyone brings their palette of colours to the stage, from the backup vocalists to the solo instrumentalists to the main artists. Awesomeness lies in this experimentation, in this coming together.&lt;/p&gt;
+&lt;p&gt;Yes, there is experimentation behind bollywood music too, when they experiment with the hairstyle of the actor, the size of the actress's dress, or that eureka moment when they find the "munni" "sheila" or "tooh" of the next song! Congratulations :)
+Every song will find listeners. But not every listener will find Music.&lt;/p&gt;
+&lt;p&gt;I might not be able to answer "What music do you listen to, then?" when asked again. But I can sure share my list of favorites from these shows. &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=-S5U2GXKBSo"&gt;&lt;em&gt;Saari Raat, Noori&lt;/em&gt;, Coke Studio Pakistan, Season 2&lt;/a&gt;. After listening to Noori live at Seher, this song has been the most played on my player, and in my head. Each and every moment in this song is awesome!  &lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=v11rpZgzOCk"&gt;&lt;em&gt;Hallelujah, Karsh Kale ft Shilpa Rao&lt;/em&gt;, Coke Studio @ MTV Season 2&lt;/a&gt;. Amazing composition by Warren Mendonsa, Karsh Kale's rendition of the Leonard Cohen classic, and Shilpa's voice.  &lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=L-9s4nTLSdA"&gt;&lt;em&gt;Madari (Jamura), Vishal Dadlani&lt;/em&gt; Mtv Coke Studio Season 2&lt;/a&gt;. Vishal Dadlani and Sonu Kakkar. It is an amazing feeling to hear Vishal Dadlani singing songs like these, after having heard him with Pentagram.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=uMF8npZN5wE"&gt;&lt;em&gt;Khamaj, Shafqat Amanat Ali Khan&lt;/em&gt;, Coke Studio Pakistan, Season 2&lt;/a&gt;. The freedom of the artist I was talking about above. The "thairaav" in his voice can be witnessed here!&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.youtube.com/watch?v=IvU-RyEPlkQ"&gt;&lt;em&gt;Phir Le Aaya, Arijit Singh&lt;/em&gt;, Mtv Unplugged Season 3&lt;/a&gt;. This song! It deserved a format like Mtv Unplugged. And Arijit deserved this song too!&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="music"></category></entry><entry><title>Couch to The Great Delhi Run</title><link href="http://blog.karanluthra.in/2013/12/couch-to-great-delhi-run/" rel="alternate"></link><updated>2013-12-14T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2013-12-14:2013/12/couch-to-great-delhi-run/</id><summary type="html">&lt;p&gt;I'm a Computer Science and Engineering student, and if you know ten of them, not 
+more than three would you call fit and active. Above that, I am Punjabi, a beer 
+lover, and I have spent most of my PT periods in school in the Music Room. In 
+fact, the only thing constantly growing in my life since the last four-five 
+years was my belly!&lt;/p&gt;
+&lt;p&gt;Yes, WAS. I will be running The Great Delhi Run tomorrow, which is a part of the 
+Airtel Delhi Half Marathon, an Annual event for Delhites. I will be running 
+about 6 kilometers, and this time I am not just hoping, I am sure that I will be 
+able to complete the length of the race. Thanks to the spirit of this event, I 
+am feeling better than my preparation. Also, over the last 2 months, I have very 
+much learnt to believe in the Me vs Me ideology. Add to that the wonderful crowd 
+of active and lively people, with whom I will match my steps tomorrow.&lt;/p&gt;
+&lt;p&gt;We will start from JLN Stadium at 9.30 in the morning, while the 22 km event 
+would have begun earlier. We will be running around the Lodhi Road area and this 
+is gonna be a new experience for me as I have only been to jogging tracks of 
+local parks. &lt;/p&gt;
+&lt;p&gt;All this aside, the thing that is making me really excited is the people I will 
+meet, the new friends I will make. Quoting the speaker from runningandliving.com 
+at the Get Active Expo last week, "Above all, have fun, have a good time". They 
+also provided amazing guidance, and a checklist for participants.&lt;/p&gt;
+&lt;p&gt;It's gonna be a challenge tomorrow, and I am sure I will get past it and come 
+and write another blog post (this time with pictures)!&lt;/p&gt;
+&lt;p&gt;Tomorrow, 9:30 AM, 6 kms. Cheer for me :D&lt;/p&gt;</summary><category term="fitness"></category><category term="running"></category><category term="delhi"></category><category term="marathon"></category></entry><entry><title>Six Weeks to Undo Sixth Semester's Sins</title><link href="http://blog.karanluthra.in/2013/06/six-weeks-to-undo-sixth-semesters-sins/" rel="alternate"></link><updated>2013-06-17T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2013-06-17:2013/06/six-weeks-to-undo-sixth-semesters-sins/</id><summary type="html">&lt;p&gt;Introductory paragraphs are supposed to be short, else the reader gets put off, 
+they say! Mine was running long enough, so I made it the second one. &lt;/p&gt;
+&lt;p&gt;I have recently been called 'mugga' by my younger sibling! I have been called 
+that every alternate day, for the last two weeks! I know I dint mug anything, 
+just accepted my inability at producing what semester exams at my university 
+expect from students (yes, took me a lot of time to figure this out), and then 
+just tried to remain sincere with my plan. But that sincerity would zero down to 
+frustration after most exams, when it seemed pointless to have gotten through 
+all those books and notes, for the test was only about your ability to link the 
+keywords in the question to the keywords you remember from the last 24 hours' 
+preparation. Write a few points that could be 'highlighted' to qualify your 
+answer correct. Now, to quantify your effort, fill sheets with what-so-ever crap 
+you can think of. Yes, writing the question again is also acceptable!!&lt;/p&gt;
+&lt;p&gt;Now after all the junk, its time to feed some spinach to our minds! I have quite 
+a list. So would all my peers. But, I'm gonna share it here. I have heard 
+talking about it helps people stick to their plans, so lets try it this time! 
+Here's a list of all that I hope to read, learn and do in the next six-eight 
+weeks before college reopens:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make the most of my Summer Training: I admire my classmates who are coding for 
+GSOC, or working at startups, or going to IITs or other research internships. 
+Myself, I just wanna make the most out of what I got in hand, and I consider 
+myself lucky for that. With my cousins help, I got an opportunity at 
+TechMahindra, and I am really looking forward to having good exposure and a 
+hard-working time there, irrespective of the project I will be assigned 
+(tomorrow)!&lt;/li&gt;
+&lt;li&gt;Books to read: I will be travelling 2-4 hours everyday, and NOT driving, so 
+i started off with Stephen Hawking's The Grand Design. Next up will be Steve 
+Jobs biography by Karen Blumenthal. Lets finish these two, and I would have 
+decided the next book by then :)&lt;/li&gt;
+&lt;li&gt;Blogs to follow: I recently discovered two of my college seniors, (they 
+don't know me) have quite a few good posts. Otherwise too, they both really 
+command respect for their intellect, and I've subscribed to their blogs 
+krspeak.wordpress.com and anupamguha.wordpress.com. There are a lot more seniors 
+who inspire me, but that can become a future blog post!&lt;/li&gt;
+&lt;li&gt;I already follow zenhabits.net and recently found zenpencils.com. There 
+isn't much common other than the word ZEN and the motive to help readers. And 
+this isn't a coincidence, but I really wanna figure out what ZEN really is, too. 
+I will find other sources for that though. And articles about Taoism. One good 
+option is to follow relevant groups and people on G+. (A blog post on G+ and its 
+perks soon)&lt;/li&gt;
+&lt;li&gt;Technical articles/blogs: First, my brother had been telling me about ESR's 
+philosophy during our chats in my study breaks, and I am starting with The Art 
+of Unix Programming right away! Second, I had subscribed to Smashing Magazine 
+don't know how long back, but never read it seriously! Whenever I can squeeze 
+out time, I'll check it out in detail.&lt;/li&gt;
+&lt;li&gt;To write/learn/code/research: I really find it interesting to observe how 
+the masses perceive facebook. The most interesting part: most of us need to be 
+much more aware and alert about what's good and what's not, about FB. After 
+making the changes to my own profile, I'll write about what are the simplest few 
+changes we can make to our FB usage. And my list of alternatives to facebook, 
+for spending time online.&lt;/li&gt;
+&lt;li&gt;Next, I am going to experiment a lot with the ideas I had during exams. Some 
+of them are small enough to be a reason to learn web development, and a few 
+might be big enough to be considered for my university project. But, lots of 
+work needed here first of all!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Phew! I myself just figured out for the first time how much I had kept for 
+post-exams, after compiling this list!&lt;/p&gt;
+&lt;p&gt;Doing everything may seem unrealistic, but of course, I'll approach all these in 
+little steps. I have been adding links, so that if someone finds any of them 
+interesting, I have a partner to chat about something cool and of course, doing 
+things together helps us achieve a lot more :) &lt;/p&gt;</summary><category term="internship"></category><category term="productivity"></category><category term="college"></category></entry><entry><title>Is it time?</title><link href="http://blog.karanluthra.in/2012/10/is-it-time/" rel="alternate"></link><updated>2012-10-03T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2012-10-03:2012/10/is-it-time/</id><summary type="html">&lt;p&gt;Is it time, for me to close my eyes?
+To use the switch, to turn it off?
+Seems like the closing of the eyes,
+would only trigger a tear to fall
+Seems like, taking a breather,
+would only make me regret the call&lt;/p&gt;
+&lt;p&gt;Is it time, to step aside?
+To take the seat, and watch the game?
+Seems like its a runway on tight schedule,
+Take off, right now! Or else, dont blame.
+Remind me of the player I wanted to be,
+then anyone less, I wouldnt want to see!&lt;/p&gt;</summary><category term="inspirational"></category></entry><entry><title>Gandhi, come to my college!</title><link href="http://blog.karanluthra.in/2012/10/gandhi-come-to-my-college/" rel="alternate"></link><updated>2012-10-02T00:00:00+05:30</updated><author><name>Karan Luthra</name></author><id>tag:blog.karanluthra.in,2012-10-02:2012/10/gandhi-come-to-my-college/</id><summary type="html">&lt;p&gt;"Be the change you wish to see in the world", keh gaye hamare Dearest Gandhi.&lt;/p&gt;
+&lt;p&gt;Chuck it, who wants to read about what Gandhi said when he was alive? His 
+picture on the Indian Currency says a lot everyday, every minute, for everyone! 
+But these questions really bother me :
+Why does today's leader very much wants Gandhi only in his pocket, and not even 
+intend to incorporate, or even respectfully understand his ideals?
+Why does it take so much to be pro-active?
+Why do we let ourselves be anything less than perfect, at what we do?
+Why don't we tackle the feeling of being incompetent every morning?&lt;/p&gt;
+&lt;p&gt;All this agitation started in the morning, when I started contemplating over how 
+a particular technical festival in my college is being organized. I am an 
+engineering student, and I have put my heart and soul since the past three weeks 
+into getting sponsors for the events under my department. To clarify, my 
+father's job designation or my mother's social status doesn't help me get money 
+from investors. And I am proud of this part, that I pursue such jobs solely 
+because I love adding some value to the organizations I am associated with. And 
+I know that there are so many, so many people in the college who feel the same. 
+But then, whats wrong? Why do we, as a group, always miss perfectionism by, say 
+like the last few points? All this inspite of having many, many good leaders, in 
+a crowd of others who are not true to even themselves!
+I am lucky enough to sit at home on this national holiday, and ponder over these 
+things. Most of us are probably holidaying in some shimla or mussourie, sitting 
+fat over the bundles of Gandhi Currency notes we have been successful in 
+accumulating.
+And I am even luckier to have started off with Gandhi, I just came across a G+ 
+update which quotes Gandhi ji saying “Anger and intolerance are the twin enemies 
+of correct understanding”. And I totally believe that we need to BE THE CHANGE, 
+so Ill start afresh, keeping aside all the anger and intolerance towards the 
+TechFest situation :)&lt;/p&gt;
+&lt;p&gt;Let this be the thought for the day :
+“ There are seven things that will destroy us :
+Wealth without work, pleasure without conscience, knowledge without character, 
+religion without sacrifice, politics without principle, science without 
+humanity, and Business without Ethics”&lt;/p&gt;
+&lt;p&gt;Amen! :)&lt;/p&gt;</summary><category term="college"></category><category term="inspirational"></category></entry></feed>

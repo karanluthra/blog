@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Half Time: What's up at Trojitá</title>
+        <link rel="stylesheet" href="http://blog.karanluthra.in/theme/css/main.css" />
+        <link href="http://blog.karanluthra.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Karan Luthra Atom Feed" />
+
+        <!--[if IE]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/karanluthra/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="http://blog.karanluthra.in/">Karan Luthra </a></h1>
+                <nav><ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/archives.html">Archives</a></li>
+                    <li class="active"><a href="http://blog.karanluthra.in/category/tech">Tech</a></li>
+                    <li><a href="http://blog.karanluthra.in/category/outdoors">Outdoors</a></li>
+                    <li><a href="http://blog.karanluthra.in/category/misc">Misc</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://blog.karanluthra.in/2014/07/half-time-whats-up-at-trojita/" rel="bookmark"
+           title="Permalink to Half Time: What's up at Trojitá">Half Time: What's up at Trojitá</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="karanluthra06">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2014-07-01T00:00:00">
+                01-07-2014
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="http://blog.karanluthra.in/author/karan-luthra.html">Karan Luthra</a>
+        </address>
+<p>In <a href="http://blog.karanluthra.in/category/tech">Tech</a>. </p>
+<p>tags: <a href="http://blog.karanluthra.in/tag/c/">c++</a><a href="http://blog.karanluthra.in/tag/gsoc/">gsoc</a><a href="http://blog.karanluthra.in/tag/trojita/">trojita</a><a href="http://blog.karanluthra.in/tag/kde/">kde</a><a href="http://blog.karanluthra.in/tag/foss/">foss</a></p>
+</footer><!-- /.post-info -->      <p>Second half has just begun for the GSoC coding period as well as for the year 2014. We are all more warmed up and pacing up to see another "you will be glued to the second half", but let's take a look at what has kept me involved in Trojitá uptil now. My <a href="http://www.google-melange.com/gsoc/project/details/google/gsoc2014/luthrak/5685265389584384">project proposal</a> for <a href="http://trojita.flaska.net/">Trojitá</a> is to:  </p>
+<ul>
+<li>Rewrite Trojitá's SMTP code to enable it to use Trojitá's Sockets, and make it a first class citizen wrt the code quality, robustness, maintainabilty and features.  </li>
+<li>Bring essential features and UI changes that will make Trojitá more usable and ready for a larger user-base.  </li>
+</ul>
+<p>Since the second goal consists of small tasks that would also help a newbie (me) get more comfortable with the code, me and my mentors decided to start with these small tasks first. This is what has been done uptil now:</p>
+<ol>
+<li>
+<p>Network Reconnection Attempts<br />
+Trojitá got a feature to automatically start a reconnect attempt cycle whenever there's a network error.<br />
+Previously, whenever the application was hit by a network error, it would switch to offline mode and inform the user by throwing an error message (which would be a modal message box). Now, a message box is still thrown the first time an error is faced and attempts for reconnect begin. To keep in line with Trojitá's prinicples of being less resource hungry and be usable for users with expensive mobile connections, any two reconnect attempts are separated with timeout that doubles every step. So, timeouts go like 5 secs, 10 secs,.. 160 secs, 300 secs (Inspired by the <a href="http://en.wikipedia.org/wiki/Exponential_backoff">Exponential Backoff</a> algorithm I came across in Computer Networks class). And beyond that, attempts are made every 5 mins or manually stopped and restarted by the user. An unattended message box gets closed if network reconnects successfully. <em>Status: Merged in master</em></p>
+</li>
+<li>
+<p>Forwarding Support<br />
+Trojitá already had the ability to treat whole messages dragged and dropped into the attachments view in a composer as messages to be forwarded as dot.eml files. In addition to that, trojitá now has a patch (under review atm) that would enable forward as attachment by a single click from the GUI. This includes mangling the subject of the original message and prefixing the "Fwd: " string, as well as marking the original message as $Forwarded. <em>Status: Under <a href="https://git.reviewboard.kde.org/r/118606/">review</a></em></p>
+</li>
+<li>
+<p>Improvements around Compose Widget  </p>
+<ul>
+<li>One improvement is a bug fix that allows any changes to the subject field or the recipients fields to be treated as modifications eligible for storing in a draft. <em>Status: Merged in master</em>  </li>
+<li>Another improvement is the ability to switch the reply mode { private reply, reply to all, reply to all but me, mailing list reply} from the composer as well (previously, a mode would be picked up at the time of creating the compose reply dialog and switching between modes wasn't possible unless a new dialog be opened). The change of mode triggers the automatic setting up of recipients in the current composer and modifying the recipients puts the reply mode in a fifth state, named "hand picked recipients". This patch is under <a href="https://git.reviewboard.kde.org/r/118802/">review</a> and it is yet to be finalised <em><em>where</em></em> in the compose window should this dropdown menu be placed.  </li>
+<li>Another improvement (that won't be visible to the user) is a change in how a GUI::ComposeWidget is created. A compose widget needs a parent (MainWindow), an MSA(Mail Submissin Agent) object, a settings (QSettings) object and a couple of purpose specific parameters that can pre-fill the fields in the composer (eg: subject, body(quoted), in-reply-to, etc in the case of a "reply"). Due to increasing use-cases for the Compose Widget (Message Forwarding and Message Redirectin are two such that are being added in this GSoC project), we felt the need to refactor the ComposeWidget and provide a static API for creating ComposeWidget instances with specific roles. It looks like this:<br />
+<script src="https://gist.github.com/karanluthra/37c3f65e229761002958.js"></script>
+<a href="https://gist.github.com/karanluthra/37c3f65e229761002958#file-static-cw">Gist</a></li>
+</ul>
+</li>
+</ol>
+<p>The second half has started off with shifting the focus onto the bigger task of rewriting the SMTP library. While writing this blog post I realised how it has become a long one to read, and I will try and write about whats up with SMTP more regularly, and hopefully as smaller posts. I find twitter to be a better output stream while in the code-sprint mood and you can follow me on Twitter, I am <a href="https://twitter.com/karanluthra06">@karanluthra06</a>. Best wishes to all GSoCers; Let's make this second half the most exciting ever!</p>
+<p>Cheers! :)</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "2014/07/half-time-whats-up-at-trojita/";
+        var disqus_url = "http://blog.karanluthra.in/2014/07/half-time-whats-up-at-trojita/";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://blogkaranluthra.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://jailuthra.in/">Jai Luthra</a></li>
+                            <li><a href="http://blog.rishab.in/">Rishab Arora</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="http://blog.karanluthra.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="https://github.com/karanluthra/">Github</a></li>
+                            <li><a href="http://facebook.com/karanluthra06">Facebook</a></li>
+                            <li><a href="https://twitter.com/karanluthra06">Twitter</a></li>
+                            <li><a href="https://plus.google.com/+KaranLuthra06">Google+</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-48523857-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'blogkaranluthra';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
