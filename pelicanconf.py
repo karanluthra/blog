@@ -29,7 +29,7 @@ TAG_URL = "tag/{slug}/"
 TAG_SAVE_AS = "tag/{slug}/index.html"
 
 MENUITEMS = (('Home','/index.html'),
-	     ('Archives','/archives.html'),)
+	     ('Archives','/blog/archives.html'),)
 
 REVERSE_CATEGORY_ORDER = True
 
