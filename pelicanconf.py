@@ -46,6 +46,7 @@ SOCIAL = (('Github', 'https://github.com/karanluthra/'),
 DEFAULT_PAGINATION = False
 
 STATIC_PATHS = (('images'),
+		('images/akademy'),
 		('donttrack'),)
 
 ARTICLE_EXCLUDES = (('pages'),
